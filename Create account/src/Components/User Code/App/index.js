@@ -1,5 +1,5 @@
 import React from 'react'
-import * as ROUTES from '../../Constants/routes'
+import * as ROUTES from '../../../Constants/routes'
 import Navigation from '../Navigation'
 
 import LandingPage from '../Landing';

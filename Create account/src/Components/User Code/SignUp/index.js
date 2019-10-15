@@ -4,7 +4,7 @@ import {Link, withRouter} from 'react-router-dom';
 
 import { compose } from 'recompose'
 
-import * as ROUTES from '../../Constants/routes';
+import * as ROUTES from '../../../Constants/routes';
 
 const INITIAL_STATE ={
     username: "",
