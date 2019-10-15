@@ -35,10 +35,18 @@ class SignUpFormBase extends Component{
 
         this.props.firebase.createNewUser(email, password1)
             .then( authUser=>{
-                    this.setState({...INITIAL_STATE})
-                    this.props.history.push(ROUTES.HOME)
+                return this.props.firebase
+                    .user(authUser.user.uid)
+                    .set({
+                        username,
+                        email
+                    })
+
                 }
-            ).catch(error=>{
+            ).then(()=>{
+                this.setState({...INITIAL_STATE})
+                this.props.history.push(ROUTES.HOME)
+            }).catch(error=>{
                 console.log(error)
                 this.setState({error})
             })
