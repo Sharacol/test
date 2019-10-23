@@ -1,9 +1,11 @@
 import React from 'react';
 import { withAuthorization } from '../Session'
+import Purchases from '../../Backend/Purchases'
 
 const HomePage = ()=>{
     return(
         <div>
+            <Purchases/>
             Home
         </div>
     )
