@@ -18,14 +18,12 @@ class Firebase{
         this.db = app.database();
     }
 
-    
-
     createNewUser = (email, password)=>
         this.auth.createUserWithEmailAndPassword(email, password);
 
     signInUser = (email, password)=>
         this.auth.signInWithEmailAndPassword(email, password)
-    
+
     resetPassword = email =>
         this.auth.sendPasswordResetEmail(email)
 
@@ -39,7 +37,24 @@ class Firebase{
 
     users = () => this.db.ref('users');
 
-    purchases = () => this.db.ref('Purchase');
+    bills = uid => this.db.ref(`Bills/${uid}`);
+
+    budget = uid => this.db.ref(`Budget/${uid}`);
+
+    category = () => this.db.ref(`Category`);
+
+    userCategory = uid => this.db.ref(`Category/${uid}`);
+
+    idCount = () => this.db.ref(`ID-Count`);
+
+    personalFinance = uid => this.db.ref(`PersonalFinance/${uid}`);
+
+    purchases = uid => this.db.ref(`Purchase/${uid}`);
+
+    purchaseSum = uid => this.db.ref(`PurchaseSum/${uid}`);
+
+    rate = () => this.db.ref(`RATE`);
+
 }
 
 export default Firebase;
