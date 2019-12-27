@@ -12,9 +12,8 @@ class PurchaseForm extends Component {
         this.state = {
             test: "I'm decent",
             purchases: "blank",
-            category: ["b", 'B', 'SD'],
-
-            necessity: ["Need", "Want", "Optional"]
+            categories: ["b", 'B', 'SD'],
+            necessities: ["Need", "Want", "Optional"]
         }
     }
 
@@ -50,7 +49,7 @@ class PurchaseForm extends Component {
     }
 
     render() {
-        const { test, purchases, category, necessity } = this.state;
+        const { test, purchases, categories, necessities } = this.state;
 
         return (
             <Form onSubmit={this.onSubmit}>
@@ -69,7 +68,7 @@ class PurchaseForm extends Component {
                     <Form.Label>Necessity</Form.Label>
                     <Form.Control as="select" name="Necessity" onChange={this.onChange}>
                         {
-                            necessity.map((val, index) => {
+                            necessities.map((val, index) => {
                                 return (
                                     <option key={index}>{val}</option>
                                 )
@@ -81,7 +80,7 @@ class PurchaseForm extends Component {
                     <Form.Label>Category</Form.Label>
                     <Form.Control as="select" name="Category" onChange={this.onChange}>
                         {
-                            category.map((val, index) => {
+                            categories.map((val, index) => {
                                 return (
                                     <option key={index}>{val}</option>
                                 )
