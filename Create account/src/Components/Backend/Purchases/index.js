@@ -4,7 +4,7 @@ import { withFirebase } from '../../User Code/Firebase'
 import { withAuthentication } from '../../User Code/Session'
 import { Form, InputGroup } from 'react-bootstrap'
 
-import { lastDayOfWeek, isSunday, subDays, getDate, getYear, getMonth} from 'date-fns'
+import { lastDayOfWeek, isSunday, subDays, getDate, getYear, getMonth } from 'date-fns'
 
 class PurchaseForm extends Component {
 
@@ -12,14 +12,19 @@ class PurchaseForm extends Component {
         super(props)
 
         this.state = {
-            test: "I'm decent",
-            purchases: "blank",
-            categories: ["b", 'B', 'SD'],
-            necessities: ["Need", "Want", "Optional"]
+            title: '',
+            price: 0,
+            categoriesAvailable: ["b", 'B', 'SD'],
+            necessitiesAvailable: ["Need", "Want", "Optional"],
+            categoryChosen: 'b',
+            necessityChosen: 'Need',
+            dateRange: '',
+            monthRange: ''
         }
     }
 
     componentDidMount() {
+        this.setPurchaseRanges();
         const userUid = this.props.firebase.auth.currentUser.uid;
 
         this.props.firebase.purchases(userUid).on("value", snapshot => {
@@ -39,7 +44,6 @@ class PurchaseForm extends Component {
     }
 
     onChange = event => {
-        console.log(event.target.name)
         this.setState({
             [event.target.name]: event.target.value
         })
@@ -47,25 +51,25 @@ class PurchaseForm extends Component {
 
     onSubmit = event => {
         event.preventDefault();
-        console.log("GOOD")
+        console.log("SUBMITTED")
     }
 
-    getPurchaseRanges = () =>{
+    setPurchaseRanges = () => {
         const currentDate = new Date();
         let nextSaturday = lastDayOfWeek(currentDate)
         let isItSunday = false;
         let pastSunday = currentDate;
-        while(!isSunday(pastSunday)){
-            pastSunday = subDays(pastSunday,1);
+        while (!isSunday(pastSunday)) {
+            pastSunday = subDays(pastSunday, 1);
         }
-        let dateRange = 
-            `${getDate(pastSunday)}\\${getYear(pastSunday)}-`+
+        let dateRange =
+            `${getDate(pastSunday)}\\${getYear(pastSunday)}-` +
             `${getDate(nextSaturday)}\\${getYear(nextSaturday)}`
-        let monthRange = 
-            `${getMonth(pastSunday) + 1}\\${getYear(pastSunday)}-`+
+        let monthRange =
+            `${getMonth(pastSunday) + 1}\\${getYear(pastSunday)}-` +
             `${getMonth(nextSaturday) + 1}\\${getYear(nextSaturday)}`
 
-        return ({
+        this.setState({
             dateRange,
             monthRange
         })
@@ -73,40 +77,47 @@ class PurchaseForm extends Component {
 
 
     render() {
-        const { test, purchases, categories, necessities } = this.state;
-        console.log(this.getPurchaseRanges().monthRange)
+        const { title,
+            price,
+            categoriesAvailable,
+            necessitiesAvailable,
+            categoryChosen,
+            necessityChosen,
+            dateRange,
+            monthRange } = this.state;
+        console.log(title, price, categoryChosen, necessityChosen)
         return (
             <Form onSubmit={this.onSubmit}>
                 <Form.Group controlId="PurchaseTitle">
                     <Form.Label>Title</Form.Label>
-                    <Form.Control name="Title" onChange={this.onChange} />
+                    <Form.Control name="title" onChange={this.onChange} />
                 </Form.Group>
                 <Form.Group controlId="PurchasePrice">
                     <InputGroup.Prepend>
-                        <InputGroup.Text id="inputGroupPrepend">$</InputGroup.Text>
+                        <InputGroup.Text id="MoneyPrepend">$</InputGroup.Text>
                     </InputGroup.Prepend>
                     <Form.Label>Price</Form.Label>
-                    <Form.Control name="Price" onChange={this.onChange} aria-describedby="inputGroupPrepend"/>
+                    <Form.Control name="price" onChange={this.onChange} aria-describedby="MoneyPrepend" />
                 </Form.Group>
-                <Form.Group controlId="NecessityChoice">
-                    <Form.Label>Necessity</Form.Label>
-                    <Form.Control as="select" name="Necessity" onChange={this.onChange}>
+                <Form.Group controlId="CategoryChoice" >
+                    <Form.Label>Category</Form.Label>
+                    <Form.Control as="select" name="categoryChosen" onChange={this.onChange}>
                         {
-                            necessities.map((val, index) => {
+                            categoriesAvailable.map((val, index) => {
                                 return (
-                                    <option id = {index} key={index}>{val}</option>
+                                    <option key={index}>{val}</option>
                                 )
                             })
                         }
                     </Form.Control>
                 </Form.Group>
-                <Form.Group controlId="CategoryChoice" >
-                    <Form.Label>Category</Form.Label>
-                    <Form.Control as="select" name="Category" onChange={this.onChange}>
+                <Form.Group controlId="NecessityChoice">
+                    <Form.Label>Necessity</Form.Label>
+                    <Form.Control as="select" name="necessityChosen" onChange={this.onChange}>
                         {
-                            categories.map((val, index) => {
+                            necessitiesAvailable.map((val, index) => {
                                 return (
-                                    <option key={index}>{val}</option>
+                                    <option id={index} key={index}>{val}</option>
                                 )
                             })
                         }
