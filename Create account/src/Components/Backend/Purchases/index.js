@@ -14,10 +14,14 @@ class PurchaseForm extends Component {
         this.state = {
             title: '',
             price: 0,
-            categoriesAvailable: ["b", 'B', 'SD'],
-            necessitiesAvailable: ["Need", "Want", "Optional"],
-            categoryChosen: 'b',
-            necessityChosen: 'Need',
+            categoriesAvailable: [
+                "Food", 'Housing', 'Transportation',
+                "Entertainment", "Miscellaneous",
+                "Personal", "Medical"
+            ],
+            necessitiesAvailable: ["Critical", "Optional", "Unnecessary"],
+            categoryChosen: 'Food',
+            necessityChosen: 'Critical',
             dateRange: '',
             monthRange: ''
         }
@@ -25,22 +29,7 @@ class PurchaseForm extends Component {
 
     componentDidMount() {
         this.setPurchaseRanges();
-        const userUid = this.props.firebase.auth.currentUser.uid;
 
-        this.props.firebase.purchases(userUid).on("value", snapshot => {
-            if (snapshot.exists()) {
-                purchases.map(value => {
-                    console.log(value)
-                })
-            } else {
-
-            }
-            let purchases = snapshot.val();
-            // this.setState({
-            //     purchases
-            // })
-            console.log(snapshot.exists())
-        })
     }
 
     onChange = event => {

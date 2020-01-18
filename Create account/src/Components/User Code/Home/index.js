@@ -6,7 +6,6 @@ const PurchasePage = ()=>{
     return(
         <div>
             <Purchases/>
-            Purchases
         </div>
     )
 };
