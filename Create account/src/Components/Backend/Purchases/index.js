@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { withFirebase } from '../../User Code/Firebase'
 import { withAuthentication } from '../../User Code/Session'
-import { Form, InputGroup } from 'react-bootstrap'
+import { Form, InputGroup, Button } from 'react-bootstrap'
 
 import { lastDayOfWeek, isSunday, subDays, getDate, getYear, getMonth } from 'date-fns'
 
@@ -12,6 +12,7 @@ class PurchaseForm extends Component {
         super(props)
 
         this.state = {
+            uid: null,
             title: '',
             price: 0,
             categoriesAvailable: [
@@ -29,7 +30,11 @@ class PurchaseForm extends Component {
 
     componentDidMount() {
         this.setPurchaseRanges();
+        let uid = this.props.firebase.auth.currentUser.uid ? this.props.firebase.auth.currentUser.uid : null;
 
+        this.setState({
+            uid
+        })
     }
 
     onChange = event => {
@@ -40,7 +45,20 @@ class PurchaseForm extends Component {
 
     onSubmit = event => {
         event.preventDefault();
-        console.log("SUBMITTED")
+        let uid = this.state.uid;
+        if(uid){
+            this.props.firebase.purchases(uid).set({
+            t: 'sdf',
+
+            })
+        }
+
+        this.setState({
+            categoryChosen: 'Food',
+            necessityChosen: 'Critical',
+            title: '',
+            price: 0,
+        })
     }
 
     setPurchaseRanges = () => {
@@ -79,14 +97,14 @@ class PurchaseForm extends Component {
             <Form onSubmit={this.onSubmit}>
                 <Form.Group controlId="PurchaseTitle">
                     <Form.Label>Title</Form.Label>
-                    <Form.Control name="title" onChange={this.onChange} />
+                    <Form.Control name="title" onChange={this.onChange} value={title} />
                 </Form.Group>
                 <Form.Group controlId="PurchasePrice">
                     <InputGroup.Prepend>
                         <InputGroup.Text id="MoneyPrepend">$</InputGroup.Text>
                     </InputGroup.Prepend>
                     <Form.Label>Price</Form.Label>
-                    <Form.Control name="price" onChange={this.onChange} aria-describedby="MoneyPrepend" />
+                    <Form.Control name="price" onChange={this.onChange} aria-describedby="MoneyPrepend" value={price} />
                 </Form.Group>
                 <Form.Group controlId="CategoryChoice" >
                     <Form.Label>Category</Form.Label>
@@ -112,6 +130,9 @@ class PurchaseForm extends Component {
                         }
                     </Form.Control>
                 </Form.Group>
+                <Button type="submit">
+                    Submit
+                </Button>
             </Form>
         )
     }
